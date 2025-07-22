@@ -1,0 +1,20 @@
+#ifndef MOTOR_CONTROLLER_H
+#define MOTOR_CONTROLLER_H
+
+#include <iostream>
+#include "pico/stdlib.h"
+#include "hardware/pwm.h"
+
+#define PWM_PIN 2               // GPIO pin for ESC signal
+#define PWM_FREQ 50             // 50 Hz PWM (20ms period for ESC)
+#define MIN_PULSE 1000          // 1.0 ms pulse (0% throttle)
+#define MAX_PULSE 2000          // 2.0 ms pulse (100% throttle)
+#define MOTOR_ARMING 10    // Motor zero throttle (10%)
+#define MOTOR_START 15          // Motor start throttle (15%)
+#define MOTOR_MAX_CONTROL 100   // Max control signal (100%)
+
+void init_pwm();
+void set_motor_throttle(float throttle_percent);
+void control_motor(float control_output, float max_output);
+
+#endif
