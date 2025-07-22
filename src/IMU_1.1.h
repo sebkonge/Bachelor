@@ -4,7 +4,9 @@
 #define IMU_1_1_H
 
 #include <iostream>
+#include <fstream>
 #include <cmath>
+#include <vector>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 /*********************************** - I2C & IMU cofig - ***********************************/
@@ -24,7 +26,8 @@
 #define I2C_BAUDRATE 400000// Initialize I2C at 400 kHz
 
 //#define CTRL1_XL 0b10001100 // 1,66 kHz, ±8g, 400 Hz filter
-#define CTRL1_XL 0b10000100 // 1,66 kHz, ±16g, 400 Hz filter
+// #define CTRL1_XL 0b10000100 // 1,66 kHz, ±16g, 400 Hz filter
+#define CTRL1_XL 0b10000111 // 1,66 kHz, ±16g, 50 Hz filter
 
 #define CTRL2_G 0b10001000 // 1,66 kHz, 1000 dps, disabled (FS mode selection)
 
@@ -46,39 +49,49 @@ struct Accel {
     float acc_ang[2];
     float vel_xyz[3];
     float pos_xyz[3];
-    float prev_vel_xyz[3] = {0, 0, 0};
-    float prev_pos_xyz[3] = {0, 0, 0};
+    float prev_vel_xyz[3] = {0.f, 0.f, 0.f};
+    float prev_pos_xyz[3] = {0.f, 0.f, 0.f};
 };
 
 struct Gyro {
     float axis[3];
     float ang_vel_xyz[3];
-    float ang_pos_xyz[3] = {0, 0, 0};
-    float prev_ang_xyz[3] = {0, 0, 0};
+    float ang_pos_xyz[3] = {0.f, 0.f, 0.f};
+    float prev_ang_xyz[3] = {0.f, 0.f, 0.f};
 };
 
 struct DataVal {
     int16_t raw_gyro_xyz[3];
     int16_t raw_accel_xyz[3];
     uint32_t timestamp;
-    float prev_timestamp_seconds = 0;
+    float prev_timestamp_seconds = 0.f;
 };
 
 struct PID{
-    float target_angle = 90;
-    float error = 0;
-    float prev_error = 0;
-    float integral = 0;
-    float derivative = 0;
-    float prev_timestamp_seconds_pid = 0;
+    float target_angle = 0.f;
+    float error = 0.f;
+    float prev_error = 0.f;
+    float integral = 0.f;
+    float derivative = 0.f;
+    float prev_timestamp_seconds_pid = 0.f;
+    bool regulator_on = false;
+    float output = 0.f;
+    std::string pid_axis;
 };
 
+struct sdInfo{
+    std::string InfoString;
+    uint32_t timestamp;   
+    float ZAcceleration;
+};
+
+void resetIMU();
 void lsm6ds3_init();
 void configure_LSM6DS3();
 void readTimestamp();
 void resetTimestamp();
-float PID_regulator(DataVal &dataVal, PID &pid, float &current_angle, float Kp, float Ki, float Kd);
+float PID_regulator(DataVal &dataVal, PID &pid, std::string pid_axis, float &current_angle, float Kp, float Ki, float Kd);
 void read_Accel_and_Gyro(Accel &accel, Gyro &gyro, DataVal &dataVal);
-void integrate_to_vel_pos(Accel &accel, Gyro &gyro, DataVal &dataVal);
+void integrate_to_vel_pos(Accel &accel, Gyro &gyro, DataVal &dataVal, PID &pid_x, PID &pid_y, sdInfo &sdInfo);
 
 #endif

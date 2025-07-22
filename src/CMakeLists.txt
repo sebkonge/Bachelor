@@ -49,10 +49,13 @@ pico_set_program_version(IMU_1.1 "0.1")
 pico_enable_stdio_uart(IMU_1.1 0)
 pico_enable_stdio_usb(IMU_1.1 1)
 
+add_subdirectory(lib/pico_fatfs)
+
 # Add the standard library to the build
 target_link_libraries(IMU_1.1
     pico_stdlib
     pico_cyw43_arch_none
+    pico_fatfs
 )
 
 # Add the standard include files to the build
