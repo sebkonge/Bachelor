@@ -1,5 +1,5 @@
 # Bachelor
-Thesis: 
+[Thesis](./Bachelor_Rapport.pdf)
 
 src includes the final code.
 To run project, download src files into workspace and setup CMake (or use CMakeLists.txt from src folder).
