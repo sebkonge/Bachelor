@@ -1,6 +1,8 @@
 # Bachelor
 [Thesis](./Bachelor_Rapport.pdf)
 
+YouTube: https://www.youtube.com/watch?v=11JPB92M4Zs&list=PLOyESx9PWsiB_6e26h_a_aPU2y4m0XSPj
+
 src includes the final code.
 To run project, download src files into workspace and setup CMake (or use CMakeLists.txt from src folder).
 Code is flashed in ubuntu using the Raspberry Pi Pico extension in VScode. 
